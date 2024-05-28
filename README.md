@@ -1,1 +1,1 @@
-# BChanGod_Device.github.io
+# 디바이스마트 공모전
