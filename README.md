@@ -51,9 +51,10 @@
 | 팀원 | 한민규 |MariaDB DB생성, data 시각화, AI 학습 data Jetson nano Cam 인식|
 
 ## 개발 일정
-
+![개발](https://github.com/BChanGod/BChanGod_Device.github.io/blob/main/%EC%82%B0%EB%B6%88%EA%B0%90%EC%A7%80_%EC%9D%B4%EB%AF%B8%EC%A7%80/%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A0%95.jpg)
 
 ## 향후 목표
+-준비-
 
 ## 참고 자료, 문헌
 - 산림청, 산불 발생 현황, https://www.forest.go.kr/kfsweb/kfi/kfs/frfr/selectFrfrStats.do?mn=NKFS_02_02_01_05
