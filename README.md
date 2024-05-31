@@ -3,7 +3,7 @@
 ---
 ## 프로젝트 주제 : AI를 활용한 산불 감지 수막 설비 시스템
 
-![header](https://capsule-render.vercel.app/api?type=venom&color=0:FC4100,100:b678c4&height=300&section=header&text=산불감지방어시스템&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=venom&color=0:FC4100,100:b678c4&height=300&section=header&text=AI를활용한산불감지수막시스템&fontSize=60)
 
 ---
 ## 작품 기간 : 24.03.01 ~ 24.03.31
