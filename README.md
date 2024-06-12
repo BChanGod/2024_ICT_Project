@@ -3,7 +3,7 @@
 ---
 # 프로젝트 주제
 
-![header](https://capsule-render.vercel.app/api?type=venom&color=0:FC4100,100:b678c4&height=200&section=header&text=AI를_활용한_산불_감지_수막_설비_시스템&fontSize=40)
+![header](https://capsule-render.vercel.app/api?type=venom&color=0:FC4100,100:b678c4&height=200&section=header&text=AI를%20활용한%20산불%20감지%20수막%20설비%20시스템&fontSize=40)
 
 ---
 ## 작품 기간 : 24.03.01 ~ 24.03.31
