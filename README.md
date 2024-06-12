@@ -7,8 +7,11 @@
 
 ---
 ## 작품 기간 : 24.03.01 ~ 24.03.31
+![개발](https://github.com/BChanGod/BChanGod_Device.github.io/blob/main/%EC%82%B0%EB%B6%88%EA%B0%90%EC%A7%80_%EC%9D%B4%EB%AF%B8%EC%A7%80/%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A0%95.jpg)
 ---
 ## 주제 선정 배경
+![산림청_자료](https://github.com/BChanGod/2024_ICT_Project/assets/159971128/afa049f9-28f3-4954-8455-0f7ea5eada07)
+
 전 세계적인 기후 변화로 산불 발생 빈도와 규모가 커지는 추세이고, 봄철의 경우 건조하여 산불 발생 빈도가 높다.
 <br>
 
@@ -35,6 +38,13 @@
 **위의 효과로 대피 시간 확보와 산불 번짐을 저지 및 둔화 시킬 수 있으며, 적은 인원으로 효율적인 시스템 관리와 소방산업 활성화의 기여할 것**
 
 ---
+## 시스템 구성도
+![시스템 구성도](https://github.com/BChanGod/2024_ICT_Project/assets/159971128/24445863-9642-4c8f-919d-c142f1277235)
+
+## FlowChart
+![전체시스템_flowchart](https://github.com/BChanGod/2024_ICT_Project/assets/159971128/3566f506-eee6-4758-8099-bc9f8d10f24b)
+
+---
 ## 개발 환경
 | Board | Arduino | Jetson Nono | Raspberry Pi|
 | --- | --- | --- | --- |
@@ -49,9 +59,6 @@
 | 팀장 | 이병찬 |Data Set AI 학습, Arduino Actuator, 통신부, H/W 제작|
 | 팀원 | 김민환 |Arduino Sensor, Actuator, 통신부, 구성도 및 FlowChart 제작|
 | 팀원 | 한민규 |MariaDB DB생성, data 시각화, Jetson nano Cam 인식|
-
-## 개발 일정
-![개발](https://github.com/BChanGod/BChanGod_Device.github.io/blob/main/%EC%82%B0%EB%B6%88%EA%B0%90%EC%A7%80_%EC%9D%B4%EB%AF%B8%EC%A7%80/%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A0%95.jpg)
 
 ## 향후 목표
 AI를 활용한 산불 감지 수막 설비 시스템에서는 수막 설비를 대신하여 모터 펌프를 사용하고 일반 웹캠으로 산불을 감지하였으며, 외부 환경 변화가 적은 실내에서 시연을 진행하였다. 이점을 보완하여 상용화하기 위해서는 아래와 같은 향후 목표를 제안한다.
