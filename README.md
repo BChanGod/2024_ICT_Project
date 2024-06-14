@@ -56,9 +56,9 @@
 ## 프로젝트 팀원
 |  | 이  름 | 역할 분담 |
 | --- | --- | --- |
-| 팀장 | 이병찬 |Data Set AI 학습, Arduino Actuator, 통신부, H/W 제작|
+| 팀장 | 이병찬 |Data Set Yolov5 딥러닝 모델을 이용하여 AI 학습, Arduino Actuator, 통신부, H/W 제작|
 | 팀원 | 김민환 |Arduino Sensor, Actuator, 통신부, 구성도 및 FlowChart 제작|
-| 팀원 | 한민규 |MariaDB DB생성, data 시각화, Jetson nano Cam 인식|
+| 팀원 | 한민규 |MariaDB DB 생성, data 시각화, 학습된 AI를 Jetson nano Cam으로 검증|
 
 ## 향후 목표
 AI를 활용한 산불 감지 수막 설비 시스템에서는 수막 설비를 대신하여 모터 펌프를 사용하고 일반 웹캠으로 산불을 감지하였으며, 외부 환경 변화가 적은 실내에서 시연을 진행하였다. 이점을 보완하여 상용화하기 위해서는 아래와 같은 향후 목표를 제안한다.
