@@ -3,8 +3,8 @@
 코드 : 아두이노 액추에이터부
 */
 
-#include <WiFiEsp.h>
-#include <SoftwareSerial.h>
+#include <WiFiEsp.h> // esp 모듈과 통신을 위한 lib
+#include <SoftwareSerial.h> // 아두이노 디지털 핀을 통해 시리얼 통신을 수행하기 위한 lib
 #include <TimerOne.h>
 
 // 상태를 확인하기 위한 LCD
@@ -49,18 +49,18 @@ char lcdLine2[17] = "WiFi Connecting!";
 unsigned int secCount;
 
 // 와이파이 설정
-SoftwareSerial wifiSerial(WIFIRX, WIFITX);
-WiFiEspClient client;
+SoftwareSerial wifiSerial(WIFIRX, WIFITX); // RX, TX Pin 설정
+WiFiEspClient client; // lib를 사용해 esp 모듈과 통신을 가능하게 함
 
 // 디버깅용 LCD
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2); // I2C LCD를 사용함으로 Arduino와 LCD 모듈 사이 접속이 간단해지며, 전선이 적게 필요
 
 // BUZZER 주파수
-int frequencies[] = {2000, 2100};
+int frequencies[] = {2000, 2100}; // 사이렌 소리를 구현하기 위해 번걸아가게
 int buzzerSIZE = sizeof(frequencies) / sizeof(frequencies[0]);
 
 void setup() {
-  // 확인용 LCD
+  // 확인용 LCD, 디버깅 과젱에서 시스템 상태를 사용자에게 표시할 수 있음음
   lcd.init();
   lcd.backlight();
   lcdDisplay(0, 0, lcdLine1);
@@ -82,10 +82,10 @@ void setup() {
 
 void loop() {
   if (client.available()) {
-    socketEvent();
+    socketEvent(); // 클라이언트로 부터 받은 메시지가 도착했을때 처리
   }
 
-  if (timerIsrFlag) //0.5초에 한번씩 실행
+  if (timerIsrFlag) // 0.5초에 한번씩 실행
   {
     timerIsrFlag = false;
 
@@ -96,11 +96,11 @@ void loop() {
       digitalWrite(IN4, LOW);
       analogWrite(ENB, 255); // 속도 제어 코드
 
-      // LED, BUZZER 동작 FLAG ON
+      // LED, BUZZER 동작 FLAG ON 상태로 변경하는 이유는 특정 상황에 대응하여 동작 시키려고
       ledFlag = true;
       buzzerFlag = true;
 
-      // 한번만 실행되도록 함
+      // 한 번만 실행되도록 함, 트리거(외부 입력이나, 조건에 의해 일어나는 동작을 자동으로 발생)되어야 하기 때문에
       startFlag = false;
     }
 
@@ -142,7 +142,7 @@ void loop() {
     }
     // BUZZER 동작
     if(buzzerFlag)
-      tone(BUZZER_PIN, frequencies[secCount % buzzerSIZE]);
+      tone(BUZZER_PIN, frequencies[secCount % buzzerSIZE]); // 초카운터를 buzzerSIZE로 나눈 나머지 계산해서 초가 증가할 때 마다 배열 내 다음 주파수로 이동하여 부저 작동
   }
 }
 
@@ -150,13 +150,13 @@ void loop() {
 void socketEvent()
 {
   int i = 0;
-  char * pToken;
-  char * pArray[ARR_CNT] = {0};
-  char recvBuf[CMD_SIZE] = {0};
+  char * pToken; // stork 함수를 파싱할 문자열 가리킬 포인터
+  char * pArray[ARR_CNT] = {0}; // 파싱된 명령어 저장할 문자열 배열
+  char recvBuf[CMD_SIZE] = {0}; // 클라리언트로부터 수신한 메시지 저장할 버퍼
   int len;
 
   sendBuf[0] = '\0';
-  len = client.readBytesUntil('\n', recvBuf, CMD_SIZE);
+  len = client.readBytesUntil('\n', recvBuf, CMD_SIZE); // 줄 바꿈 문자나 나온대까지 데이터를 읽고 recvBuf에 저장, client.flush()를 호출하여 클라이언트 clean
   client.flush();
 
   // 명령어 파싱
@@ -166,18 +166,18 @@ void socketEvent()
     pArray[i] =  pToken;
     if (++i >= ARR_CNT)
       break;
-    pToken = strtok(NULL, "[@]");
+    pToken = strtok(NULL, "[@]"); // 분리된 각 토클은 pAarry에 저장하고, ARR_CNT보다 크게 파싱되면 더 이상 파싱하지 않고 반복문 종료
   }
 
   // 명령어가 [ 와 ], @로 나눠져서 분리된다. 
-  if ((strlen(pArray[1]) + strlen(pArray[2])) < 16)
+  if ((strlen(pArray[1]) + strlen(pArray[2])) < 16) // 파싱된 결과에서 2번째, 3번째 문자열 길이 합한 값이 16보다 작으면 LCD 출력
   {
     // 받아온 명령어를 LCD에 출력함
     sprintf(lcdLine2, "%s %s", pArray[1], pArray[2]);
     lcdDisplay(0, 1, lcdLine2);
   }
-
-  if (!strncmp(pArray[1], " New", 4)) // New Connected
+  //strncmp > 두 문자열을 일부 또는 전체로 비교하는 함수수
+  if (!strncmp(pArray[1], " New", 4)) // New Connected, 문자열 처음 4글자가 New와 일치한가
   {
     strcpy(lcdLine2, "Server Connected");
     return ;
@@ -185,8 +185,8 @@ void socketEvent()
   else if (!strncmp(pArray[1], " Alr", 4)) //Already logged
   {
     client.stop();
-    server_Connect();
-    return ;
+    server_Connect(); // 일치하면 client 연결을 중단하고, 두 함수를 호출해 서버 재연결결
+    return ; 
   }
   else if (!strncmp(pArray[1], "ACTUATOR", 8))  // [ACT_ARD]ACTUATOR@??? 동작 on/off 명령어 
   { 
@@ -210,7 +210,7 @@ void socketEvent()
 
 
 // 타이머 설정
-void timerIsr()
+void timerIsr() // 인터럽트 발생할 때 마다, 플래그를 설정하여 변수 증가, 정확한 시간에 맞추어 수행
 {
   timerIsrFlag = true;
   secCount++;
@@ -218,7 +218,7 @@ void timerIsr()
 
 // 와이파이 설정
 void wifi_Setup() {
-  wifiSerial.begin(38400);
+  wifiSerial.begin(38400); // S/W 시리얼통신은 일반적으로 H/W 시리얼보다 느려 ESP센서와 안정성과 성능에 맞춤춤
   wifi_Init();
   server_Connect();
 }
