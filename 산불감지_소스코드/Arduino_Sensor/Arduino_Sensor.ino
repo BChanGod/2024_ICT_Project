@@ -2,8 +2,8 @@
 프로젝트 : 산불 감지 시스템
 코드 : 아두이노 센서부
 */
-#include <WiFiEsp.h>
-#include <SoftwareSerial.h>
+#include <WiFiEsp.h> // esp모듈과 통신을 위한 lib
+#include <SoftwareSerial.h> // 아두이노 디지털 핀을 통해 시리얼 통신을 수행하기 위한 lib
 #include <MsTimer2.h>
 #include <DHT.h>
 #include <TinyGPS.h>
@@ -38,15 +38,14 @@ bool sensorOnFlag = false;
 bool sensorSet = false;
 bool gpsFlag = false;
 
-char sendBuf[CMD_SIZE];
+char sendBuf[CMD_SIZE]; // 서버에 명령어를 전송할 버퍼
 
 char lcdLine1[17] = "FIRE DETECTOR";
 char lcdLine2[17] = "WiFi Connecting!";
-
 unsigned int secCount;
+char getSensorId[10]; // 센서 id
 
-char getSensorId[10];
-volatile int sensorTime;
+volatile int sensorTime; // 센서 작동 시간
 int co2_threshold = 0;
 int read_cnt = 0;
 
@@ -56,18 +55,18 @@ float humi = 0.0;
 int isfireDetected = LOW;
 int co2 = 0;
 int co2_percent = 0;
-DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHTPIN, DHTTYPE); // dht 센서 객체
 
 // 와이파이 설정
 SoftwareSerial wifiSerial(WIFIRX, WIFITX);
 WiFiEspClient client;
 
 // gps 설정 - 하드웨어 시리얼 사용
-TinyGPS gps;
+TinyGPS gps; // gps설정 > 하드웨어 시리얼 사용용
 float latitude, longitude;  // 위도, 경도를 저장할 변수 선언
 // 위도, 경도값을 보내기 위한 문자열
-char latStr[12];
-char lonStr[12];
+char latStr[12]; // 위도 문자열
+char lonStr[12]; // 경도 문자열
 
 // LCD 설정
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -85,20 +84,21 @@ void setup() {
   pinMode(CO2_PIN, INPUT);
 
   wifi_Setup();
-  Serial.begin(9600);
+  Serial.begin(9600); // 시리얼 통신 시작
+  // 시리얼 통신이란 초당 전송되는 비트 수를 나타내고, Arduino 시리얼 통신 표준 보레이트인 9600 설정
 
   MsTimer2::set(1000, timerIsr); // 1000ms period
   MsTimer2::start();
 
-  dht.begin();
+  dht.begin(); // dht 센서 초기화화
 }
 
 void loop() {
   if (client.available()) {
-    socketEvent();
+    socketEvent(); // 클라이언트로부터 데이터 수신 시 이벤트 처리
   }
 
-  if (timerIsrFlag) //1초에 한번씩 실행
+  if (timerIsrFlag) // 1초에 한번씩 실행
   {
     timerIsrFlag = false;
 
@@ -106,14 +106,14 @@ void loop() {
     if(sensorSet)
     { 
       if(sensorTime--)
-        co2_threshold += analogRead(CO2_PIN);
+        co2_threshold += analogRead(CO2_PIN); // CO2 값 누적
       else  
       {
-        co2_threshold = co2_threshold / read_cnt + 150;
+        co2_threshold = co2_threshold / read_cnt + 150; // 평균 임계값 설정
         sensorSet = false;
-        sprintf(sendBuf, "[ALLMSG]SET SENSOR COMPLETE\n");
-        client.write(sendBuf, strlen(sendBuf));
-        client.flush();
+        sprintf(sendBuf, "[ALLMSG]SET SENSOR COMPLETE\n"); // 완료 메시지 전송송
+        client.write(sendBuf, strlen(sendBuf)); // 클라이언트를 통해 데이터 전송
+        client.flush(); // 클라이언트 버퍼 clean
       }
     }
 
@@ -121,9 +121,9 @@ void loop() {
     if(gpsFlag)
     {
       bool newData = false;
-      if(Serial.available())
+      if(Serial.available()) // 시리얼에 버퍼 있는지 확인
       {
-        char c = Serial.read();
+        char c = Serial.read(); // 한 비트 씩 데이터 읽어옴
         
         if (gps.encode(c)) // 새로운 유효값이 들어왔는지 확인
           newData = true;
@@ -156,7 +156,7 @@ void loop() {
       co2_percent = map(co2, 0, 1023, 0, 100);
 
       // 센서 데이터를 지정된 시간에 따라 DB로 보냄
-      if (sensorTime != 0 && !(secCount % sensorTime))
+      if (sensorTime != 0 && !(secCount % sensorTime)) // 0인 경우에만, 일정 시간 간격으로 센서 데이터를 전송하기 위한 조건을 아래 실행
       {
         dtostrf(latitude, 9, 6, latStr);    //37.542304   9:전체자리수, 6:소수이하 자리수
         dtostrf(longitude, 10, 6, lonStr);  //126.841102  10:전체자리수, 6:소수이하 자리수
@@ -229,7 +229,7 @@ void socketEvent()
     {
       sensorSet = true;
       if (pArray[3] != NULL)
-        sensorTime = atoi(pArray[3]);
+        sensorTime = atoi(pArray[3]); // 값이 있으면 정수로 변환하여 SensorTime에 저장, 없으면 기본값 10 설정정
       else
         sensorTime = 10;
 
@@ -267,7 +267,7 @@ void socketEvent()
         sensorTime = 0;
         dtostrf(latitude, 9, 6, latStr);    //37.542304   9:전체자리수, 6:소수이하 자리수
         dtostrf(longitude, 10, 6, lonStr);  //126.841102  10:전체자리수, 6:소수이하 자리수
-        sprintf(sendBuf, "[%s]%s@%d@%d@%d@%s@%s@%s\r\n", pArray[0], pArray[2], (int)temp, (int)humi, co2_percent, isfireDetected ? "DETECT":"UNDETECT", latStr, lonStr);
+        sprintf(sendBuf, "[%s]%s@%d@%d@%d@%s@%s@%s\r\n", pArray[0], pArray[2], (int)temp, (int)humi, co2_percent, isfireDetected ? "DETECT":"UNDETECT", latStr, lonStr); // 현재 센서 데이터들을 문자열로 변환하여 저장
       }
     }
     else
